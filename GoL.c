@@ -4,27 +4,17 @@
 #include <unistd.h>
 #include <math.h>
 
-#define HEIGHT 40
-#define WIDTH 40
+#ifndef WIDTH
+# define WIDTH 40
+#endif
 
-void	up(int n)
-{
-	printf("\x1b[%dA", n);
-}
+#ifndef HEIGHT
+# define HEIGHT 40
+#endif
 
 void	down(int n)
 {
 	printf("\x1b[%dB", n);
-}
-
-void	forward(int n)
-{
-	printf("\x1b[%dC", n);
-}
-
-void	back(int n)
-{
-	printf("\x1b[%dD", n);
 }
 
 void	pos(int	n, int m)
@@ -38,7 +28,6 @@ void	update(int layout[HEIGHT][WIDTH])
 	int	i = 0;
 	int	j = 0;
 	int	cells = 0;
-
 
 	i = 0;
 	while (i < HEIGHT)
@@ -70,8 +59,6 @@ void	update(int layout[HEIGHT][WIDTH])
 				new_arr[i][j] = 1;
 			else
 				new_arr[i][j] = 0;
-
-
 			j++;
 		}
 		i++;
@@ -79,12 +66,12 @@ void	update(int layout[HEIGHT][WIDTH])
 	memcpy(layout, new_arr, sizeof(new_arr));
 }
 
-void randomise_layout(int layout[HEIGHT][WIDTH])
+void randomise_layout(int layout[HEIGHT][WIDTH], int seed)
 {
 	int i;
 	int j;
 
-	srand(SEED);
+	srand(seed);
 	i = 0;
 	while (i < HEIGHT)
 	{
@@ -98,14 +85,20 @@ void randomise_layout(int layout[HEIGHT][WIDTH])
 	}
 }
 
-int	main(void)
+int	main(int argc, char *argv[])
 {
 	int	layout[HEIGHT][WIDTH];
 	int	i = 0;
 	int	j = 0;
 	int	k = 0;
 
-	randomise_layout(layout);
+	if (argc != 2)
+	{
+		printf("Enter a seed\n");
+		return (1);
+	}
+
+	randomise_layout(layout, atoi(argv[1]));
 
 	while (1)
 	{
